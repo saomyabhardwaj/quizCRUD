@@ -1,6 +1,7 @@
 package com.example.quizCRUD;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,6 +12,9 @@ import java.util.Optional;
 public class QuestionsController {
     @Autowired
     private QuestionRepository questionRepository;
+    @Autowired
+    private UserResponseRepository userResponseRepository;
+
     @GetMapping("/")
     public List<Questions> getAllQuestions()
     {
@@ -22,7 +26,7 @@ public class QuestionsController {
         return questionRepository.findById(id);
     }
 
-    @PostMapping("/")
+    @PostMapping("/questions")
     public Questions createQuestions(@RequestBody Questions questions)
     {
         return questionRepository.save(questions);
@@ -40,6 +44,7 @@ public class QuestionsController {
                 questions.setOption3(updatedQuestions.getOption3());
                 questions.setOption4(updatedQuestions.getOption4());
                 questions.setCorrectOption(updatedQuestions.getCorrectOption());
+                questions.setCategory(updatedQuestions.getCategory());
                 return questionRepository.save(questions);
         }
         else {
@@ -52,4 +57,26 @@ public class QuestionsController {
     {
         questionRepository.deleteById(id);
     }
+
+    @PostMapping("/responses")
+    public ResponseEntity<String> submitUserResponse(@RequestBody UserResponse userResponse)
+    {
+        Optional<Questions> questions=questionRepository.findById(userResponse.getQuestionId());
+        if(questions.isPresent())
+        {
+            String correctOption = questions.get().getCorrectOption();
+            if(userResponse.getUserAnswer().equalsIgnoreCase(correctOption))
+            {
+                return ResponseEntity.ok("Correct Answer!!");
+            }
+            else {
+                return ResponseEntity.ok("Wrong Answer!! Correct Answer is:-" + correctOption);
+            }
+        }
+        else {
+            return null;
+        }
+    }
+
+
 }

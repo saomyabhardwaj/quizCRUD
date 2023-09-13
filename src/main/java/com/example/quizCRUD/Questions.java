@@ -21,9 +21,10 @@ public class Questions {
     private String option3;
     private String option4;
     private String correctOption;
+    private String category;
     public Questions()
     {}
-    public Questions(String questionText,String option1, String option2,String option3,String option4,String correctOption )
+    public Questions(String questionText,String option1, String option2,String option3,String option4,String correctOption, String category )
     {
         this.questionText=questionText;
         this.option1=option1;
@@ -31,5 +32,6 @@ public class Questions {
         this.option3=option3;
         this.option4=option4;
         this.correctOption=correctOption;
+        this.category=category;
     }
 }
